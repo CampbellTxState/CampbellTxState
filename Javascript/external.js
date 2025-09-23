@@ -10,5 +10,9 @@
 // A prompt box is used to prompt users to input a value before entering a page.
 // user_name = window.prompt("Please enter your name", "Type your name here");
 // document.write(user_name);
-user_name = window.prompt("Please enter your name", "Type your name here");
-document.write(user_name);
+let user_name = window.prompt("Please enter your name", "Type your name here");
+if (user_name && user_name.trim() !== "") {
+  document.getElementById("greeting").textContent = "Hello, welcome " + user_name + "!";
+} else {
+  document.getElementById("greeting").textContent = "Hello, welcome!";
+}
