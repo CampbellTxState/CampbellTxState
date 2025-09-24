@@ -16,3 +16,9 @@ if (user_name && user_name.trim() !== "") {
 } else {
   document.getElementById("greeting").textContent = "Hello, welcome!";
 }
+//This sets the date to todays date
+var today = new Date();
+//Tells us the year of the websites creation
+var year = today.getFullYear();
+//Shows the text"copyright" and the copyright symbol
+document.getElementById("copyright").innerHTML = "Copyright &copy; " + year;
