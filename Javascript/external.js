@@ -24,8 +24,10 @@
 // document.getElementById("copyright").innerHTML = "Copyright &copy; " + year;
 var webmaps =
 [
-  ["San Marcos Crime Map", "https://crimegrade.org/safest-places-in-san-marcos-tx/", "The primary purpose of this web mapping application is to map out the safest and most dangerous areas of San Marcos, Texas."],
-  ["Dripping Springs ISD Attendance Zones", "https://www.dsisdtx.us/page/attendance-zones", "This maps purpose is to map out the Attendance zones of Dripping Springs ISD schools."],
+  ["San Marcos Crime Map", "https://crimegrade.org/safest-places-in-san-marcos-tx/"],
+  ["The primary purpose of this web mapping application is to map out the safest and most dangerous areas of San Marcos, Texas. This map uses choropleth to show the differences in crime by area. It's audience is for those looking for a safe place to live, or travel."],
+  ["Dripping Springs ISD Attendance Zones", "https://www.dsisdtx.us/page/attendance-zones"],
+  ["This maps purpose is to map out the Attendance zones of Dripping Springs ISD schools. The main purpose is to give parents information about the school their kids are zoned to. This map allows you to zoom in on your address to determine what school you're zoned to."],
 ];
 function welcome()
 {
@@ -38,18 +40,19 @@ return message
 }
 // document.getElementById("greeting").textContent = welcome()
 document.write(welcome());
-function webmap_table()
-{
+function webmap_table() {
   document.write("<table width=100%>");
-  for (var row=0; row < webmaps.length; row++)
-  {
+  for (var row = 0; row < webmaps.length; row++) {
     document.write("<tr>");
-    for (var column=0; column < webmaps[0].length; column++)
-    {
-      document.write("<td>" + webmaps[row][column] + "</td>");
+    if (row % 2 == 0) { // For even rows (0-based index)
+      for (var column = 0; column < webmaps[row].length; column++) {
+        document.write("<td>" + webmaps[row][column] + "</td>");
+      }
+    } else { // For odd rows
+      document.write("<td colspan='2'>" + webmaps[row][0] + "</td>");
     }
     document.write("</tr>");
- }
- document.write("</table>");
- return "";
+  }
+  document.write("</table>");
+  return "";
 }
