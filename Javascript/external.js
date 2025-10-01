@@ -22,6 +22,11 @@
 // var year = today.getFullYear();
 // //Shows the text"copyright" and the copyright symbol
 // document.getElementById("copyright").innerHTML = "Copyright &copy; " + year;
+var webmaps =
+[
+  ["San Marcos Crime Map", "https://crimegrade.org/safest-places-in-san-marcos-tx/", "The primary purpose of this web mapping application is to map out the safest and most dangerous areas of San Marcos, Texas."],
+  ["Dripping Springs ISD Attendance Zones", "https://www.dsisdtx.us/page/attendance-zones", "This maps purpose is to map out the Attendance zones of Dripping Springs ISD schools."],
+];
 function welcome()
 {
 let a = "Please enter your name.";
@@ -33,3 +38,18 @@ return message
 }
 // document.getElementById("greeting").textContent = welcome()
 document.write(welcome());
+function webmap_table()
+{
+  document.write("<table width=100%>");
+  for (var row=0; row < webmaps.length; row++)
+  {
+    document.write("<tr>");
+    for (var column=0; column < webmaps[0].length; column++)
+    {
+      document.write("<td>" + webmaps[row][column] + "</td>");
+    }
+    document.write("</tr>");
+ }
+ document.write("</table>");
+ return "";
+}
