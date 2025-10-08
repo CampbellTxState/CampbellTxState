@@ -4,8 +4,8 @@
   background: yellow;
 }
 .custom-popup .leaflet-popup-content-wrapper {
-    background: #fefbd8;        /* light yellow background */
-    color: #333;                 /* text color */
+    background: #fefbd8;       
+    color: #333;
     font-family: 'Arial', sans-serif;
     font-size: 14px;
     border-radius: 12px;
@@ -13,13 +13,13 @@
 }
 
 .custom-popup .leaflet-popup-tip {
-    background: #fefbd8;        /* matches wrapper */
+    background: #fefbd8;
 }
 
 .custom-popup .popup-title {
     font-weight: bold;
     font-size: 16px;
-    color: #d6336c;             /* pop of color */
+    color: #d6336c;
     margin-bottom: 5px;
 }
 
