@@ -1,171 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content = "initial-scale=1, maximum-scale=1, user-scalable=no"/>
-  <title> Lab 7 Homework </title>
-  <link rel = "stylesheet" href = "https://js.arcgis.com/4.21/esri/themes/light/main.css"/>
-  <script src = "https://js.arcgis.com/4.21/"> </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Past Tornadoes Map</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.21/esri/themes/light/main.css"/>
+  <script src="https://js.arcgis.com/4.21/"></script>
   <style>
     html, body, #viewDiv {
-      padding: 0;
       margin: 0;
+      padding: 0;
       height: 100%;
-      width: 100%;}
+      width: 100%;
+    }
 
-      html, body, #viewDiv {
-            padding: 0;
-            margin: 0;
-            height: 100%;
-            width: 100%;
-          }
+    /* Query controls panel */
+    #queryControls {
+      position: absolute;
+      top: 70px;
+      left: 20px;
+      background: rgba(50, 50, 50, 0.85);
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      z-index: 20;
+      font-family: Arial, sans-serif;
+    }
 
-      #optionsDiv{
-          background-color: dimgray;
-          color: white;
-          padding: 10px;
-          width: 350px;
-        }
+    #queryControls select, #queryControls button {
+      margin: 5px 0;
+      width: 100%;
+      padding: 5px;
+    }
 
-      .esri-popup .esri-popup-header .esri-title {
-        font-size: 18px;
-        font-weight: bolder;
-      }
+    /* Map dropdown */
+    #mapDropdown {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      z-index: 20;
+      padding: 6px;
+      border-radius: 6px;
+    }
 
-      .esri-popup .esri-popup-body .esri-popup-content {
-        font-size: 14px;
-      }
-</style>
-  <script>
-    require(["esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/layers/MapImageLayer", "esri/widgets/BasemapGallery", "esri/layers/GraphicsLayer", "esri/tasks/QueryTask", "esri/tasks/support/Query", "dojo/_base/array", "dojo/dom", "dojo/on", "dojo/domReady!"], function(Map, MapView, TileLayer, MapImageLayer, BasemapGallery, GraphicsLayer, QueryTask, Query, arrayUtils, dom, On) {
-      var CitiesRenderer = {
-        type: "simple",
-        symbol: {
-          type: "simple-marker",
-          size: 3,
-          color: "red",
-          style: "circle",
-          outline:{
-          width: 1,
-          color: "red"
-        }
-      },
-      label: "Cities"
-    };
+    /* Title and footer */
+    #title {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      z-index: 20;
+    }
 
-    var CitiesLayer = new MapImageLayer({
-      url:"https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer",
-      sublayers: [{
-        id: 0,
-        renderer: CitiesRenderer,
-        opacity: 0.4
-      }]
-    });
-    var TransportationLayer = new TileLayer({
-      url: "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer"
-    });
-
-    var map = new Map({
-      basemap: "oceans",
-      layers: [TransportationLayer, CitiesLayer]
-    });
-
-    var view = new MapView({
-      container: "viewDiv",
-      map: map,
-      zoom: 10,
-      center: [-118.2095, 34.0866]
-      });
-      var basemapGallery = new BasemapGallery({
-          view: view
-      });
-      view.ui.add(basemapGallery, {position: "top-right"});
-
-      view.when(function(){
-            view.ui.add("optionsDiv", "bottom-right");
-            on(dom.byId("doBtn"), "click", doQuery);
-          });
-          var attributeName = dom.byId("attSelect");
-          var expressionSign = dom.byId("signSelect");
-          var value = dom.byId("valSelect");
-          function doQuery(){
-            resultsLayer.removeAll();
-            params.where = attributeName.value + expressionSign.value + value.value;
-            qTask.execute(params).then(getResults).catch(promiseRejected);
-          }
-          function getResults(response){
-            var popResults = arrayUtils.map(response.features,
-              function(feature){
-                feature.popupTemplate = popupTemplate;
-                return feature;
-            });
-            resultsLayer.addMany(popResults);
-            view.goTo(popResults).then(function(){
-              view.popup.open({
-                features: popResults,
-                featureMenuOpen: true,
-                updateLocationEnabled: true
-              });
-            });
-            dom.byId("printResults").innerHTML = popResults.length + " results found!";
-          };
-          function promiseRejected(error){
-            console.error("Promise rejected: ", error.message," Parameter values: ",attributeName.value, expressionSign.value, value.value);
-          }
-          var popUrl = "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/CaliforniaCities/FeatureServer/0";
-          var popupTemplate = { title: "{City}",
-          fieldInfos:[{
-            fieldName: "Population",
-            label: "Population",
-            format: {
-              places: 0,
-              digitSeperator: true
-            }
-          },
-          {
-            fieldName: "Household",
-            label: "Household",
-            format: {
-              places: 0,
-              digitSeperator: true
-            }
-          }],
-          content: "<b>Population:" + "</b> {Population} " + "<br><b>Households:</b> {Household}" + "<br><b>Latitude:</b> {Latitude}" + "<br><b>Longitude:</b> {Longitude}"
-        };
-        var resultsLayer = new GraphicsLayer();
-        var qTask = new QueryTask({ url: popUrl });
-        var params = new Query({ returnGeometry: true, outFields: ["*"] });
-
-    });
-  </script>
+    #footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(255,255,255,0.8);
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      z-index: 20;
+    }
+  </style>
 </head>
 <body>
   <div id="viewDiv"></div>
-  <div class="esri-widget" id="optionsDiv">
-      <h2>Cities in California</h2>
-      <select class="esri-widget" id="attSelect">
-        <option value="Population">Population</option>
-        <option value="Household" selected>Households</option>
-      </select>
-      <select class="esri-widget" id="signSelect">
-        <option value="&gt;">is greater than</option>
-        <option value="&lt;">is less than</option>
-      </select>
-      <select class="esri-widget" id="valSelect">
-        <option value="10000">10,000</option>
-        <option value="50000">50,000</option>
-        <option value="100000">100,000</option>
-        <option value="150000">150,000</option>
-        <option value="200000">200,000</option>
-      </select>
-      <br>
-      <br>
-      <button class="esri-widget" id="doBtn">Do Query</button>
-      <br>
-      <p><span id="printResults"></span></p>
-      <h1>Lab 7 Homework</h1>
-  <p>Select a map to open:</p>
 
+  <!-- Title -->
+  <div id="title">Past Tornadoes Map (USA)</div>
+
+  <!-- Footer -->
+  <div id="footer">© ESRI ArcGIS Services / Open Data Sources</div>
+
+  <!-- Map selection dropdown -->
   <select id="mapDropdown" onchange="openMap()">
     <option value="">-- Choose a Map --</option>
     <option value="https://campbelltxstate.github.io/CampbellTxState/tile.layer.html">Tile Layer Map</option>
@@ -176,16 +87,105 @@
     <option value="https://campbelltxstate.github.io/CampbellTxState/basemap_gallery.html">Basemap Gallery Map</option>
   </select>
 
+  <!-- Query controls panel -->
+  <div id="queryControls">
+    <label for="tornadoStrength">Tornado Strength:</label>
+    <select id="tornadoStrength">
+      <option value="0">EF0</option>
+      <option value="1">EF1</option>
+      <option value="2">EF2</option>
+      <option value="3">EF3</option>
+      <option value="4">EF4</option>
+      <option value="5">EF5</option>
+    </select>
+    <br>
+    <label for="yearSelect">Year:</label>
+    <select id="yearSelect">
+      <option value="1950">1950</option>
+      <option value="1960">1960</option>
+      <option value="1970">1970</option>
+      <option value="1980">1980</option>
+      <option value="1990">1990</option>
+      <option value="2000">2000</option>
+      <option value="2010">2010</option>
+      <option value="2012">2012</option>
+      <option value="2015">2015</option>
+      <option value="2018">2018</option>
+    </select>
+    <br>
+    <button id="runQuery">Run Query</button>
+  </div>
+
   <script>
-    function openMap() {
-      const dropdown = document.getElementById("mapDropdown");
-      const url = dropdown.value;
-      if (url) {
-        window.open(url, "_blank");
-        dropdown.selectedIndex = 0;
-      }
-    }
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/layers/TileLayer",
+      "esri/layers/FeatureLayer"
+    ], function(Map, MapView, TileLayer, FeatureLayer) {
+
+      // Base TileLayer
+      var baseLayer = new TileLayer({
+        url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"
+      });
+
+      // Tornadoes FeatureLayer
+      var tornadoLayer = new FeatureLayer({
+        url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/Past-tornados/FeatureServer/0",
+        outFields: ["*"],
+        popupTemplate: {
+          title: "Tornado: {OM}",
+          content: "Year: {YR} <br> Strength: EF{MAG} <br> State: {ST}"
+        }
+      });
+
+      // Create map
+      var map = new Map({
+        layers: [baseLayer, tornadoLayer]
+      });
+
+      // Create view
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-95, 38], // Center of USA
+        zoom: 4
+      });
+
+      // Run query button
+      document.getElementById("runQuery").addEventListener("click", function() {
+        var strength = parseInt(document.getElementById("tornadoStrength").value); // numeric EF
+        var year = parseInt(document.getElementById("yearSelect").value);           // numeric year
+
+        // Build definition expression
+        var whereClause = "MAG = " + strength + " AND YR = " + year;
+        console.log("Applying where clause:", whereClause);
+
+        // Apply filter to layer
+        tornadoLayer.definitionExpression = whereClause;
+
+        // Animate view to filtered features
+        tornadoLayer.queryExtent().then(function(response) {
+          if (response.extent) {
+            view.goTo(response.extent.expand(1.2), { duration: 1500 });
+          } else {
+            alert("No tornadoes found for this selection.");
+          }
+        }).catch(function(err) {
+          console.error("Error querying tornadoes:", err);
+        });
+      });
+
+      // Map dropdown open function
+      window.openMap = function() {
+        var dropdown = document.getElementById("mapDropdown");
+        var url = dropdown.value;
+        if (url) {
+          window.open(url, "_blank");
+          dropdown.selectedIndex = 0;
+        }
+      };
+    });
   </script>
-    </div>
 </body>
 </html>
